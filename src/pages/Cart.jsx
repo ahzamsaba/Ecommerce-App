@@ -1,6 +1,7 @@
 import { useCart } from "../context/CartContext";
 import { useEffect, useState } from "react";
 import { databases } from "../utils/appwriteConfig";
+import { useNavigate } from "react-router-dom";
 
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const PRODUCTS_COLLECTION_ID = "685974800022b980b3f5";
@@ -8,6 +9,7 @@ const PRODUCTS_COLLECTION_ID = "685974800022b980b3f5";
 export default function Cart() {
   const { cart, removeFromCart, updateQuantity } = useCart();
   const [detailedCart, setDetailedCart] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -94,8 +96,8 @@ export default function Cart() {
             </div>
           ))}
         </div>
-        {/* Total Amount */}
-        <div className="mt-6 text-right">
+        {/* Total Amount + Go to order summary */}
+        <div className="mt-6 text-right space-y-4">
           <h2 className="text-xl font-semibold">
             Total: ₹
             {detailedCart.reduce(
@@ -103,6 +105,13 @@ export default function Cart() {
               0
             )}
           </h2>
+
+          <button
+            onClick={() => navigate('/order-summary')}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            Go to Order Summary
+          </button>
         </div>
       </>
       )}

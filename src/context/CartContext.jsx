@@ -9,10 +9,12 @@ export const useCart = () => useContext(CartContext)
 
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID
 const CART_COLLECTION_ID = "6859af840000a66c5a4c"
+const PRODUCTS_COLLECTION_ID = "685974800022b980b3f5"
 
 export default function CartProvider({children}) {
     const {user} = useAuth()
     const [cart, setCart] = useState([])
+    const [detailedCart, setDetailedCart] = useState([])
 
     const fetchCart = async () => {
         console.log("Fetching cart for user:", user?.$id);
@@ -97,6 +99,33 @@ export default function CartProvider({children}) {
         fetchCart()
     }, [user])
 
+    useEffect(() => {
+        const fetchDetailedCart = async() => {
+            if(cart.length === 0){
+                setDetailedCart([])
+                return;
+            }
+
+            const results = await Promise.all(
+                cart.map(async (item) => {
+                    try {
+                        const product = await databases.getDocument(
+                            DATABASE_ID,
+                            PRODUCTS_COLLECTION_ID,
+                            item.productId
+                        )
+                        return {...product, quantity: item.quantity, cartId: item.$id}
+                    } catch (error) {
+                        console.error("Failed to fetch product:", error);
+                        return null;
+                    }
+                })
+            )
+            setDetailedCart(results.filter(Boolean))
+        }
+        fetchDetailedCart()
+    }, [cart])
+
 
     return (
         <CartContext.Provider value={{
@@ -104,6 +133,7 @@ export default function CartProvider({children}) {
             addToCart, 
             removeFromCart, 
             updateQuantity,
+            detailedCart,
         }}>
             {children}
         </CartContext.Provider>
