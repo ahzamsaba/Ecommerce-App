@@ -4,9 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import {Routes, Route} from 'react-router-dom'
 import Navbar from './components/Navbar'
-import {Home, Cart, Login, Signup} from './pages/index'
+import {Home, Cart, Login, Signup, OrderSummary, OrderHistory} from './pages/index'
 import ProtectedRoute from './components/ProtectedRoute'
-import OrderSummary from './pages/OrderSummary'
 
 function App() {
 
@@ -32,6 +31,14 @@ function App() {
           element={
             <ProtectedRoute>
               <OrderSummary />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/order-history'
+          element={
+            <ProtectedRoute>
+              <OrderHistory />
             </ProtectedRoute>
           }
         />

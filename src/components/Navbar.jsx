@@ -9,12 +9,21 @@ export default function Navbar() {
             <Link to='/' className='text-xl font-bold'>ShopEase</Link>
             <div className='space-x-4'>
                 {user && (
-                    <Link
-                        to='/cart'
-                        className='text-gray-700'
-                    >
-                        🛒 Cart
-                    </Link>
+                    <>
+                        <Link
+                            to='/cart'
+                            className='text-gray-700'
+                        >
+                            🛒 Cart
+                        </Link>
+
+                        <Link
+                            to='/order-history'
+                            className='text-gray-700 hover:underline'
+                        >
+                            📦 My Orders
+                        </Link>
+                    </>
                 )}
                 
                 {user ? (
